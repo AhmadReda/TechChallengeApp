@@ -1,0 +1,27 @@
+
+<table class="table table-bordered table-hover">
+    <caption>Total: {{candidates.length}}</caption>
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Candidate Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Experience</th>
+        <th scope="col">Status</th>
+        <th scope="col" colspan="2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for candidate in candidates %}
+        <tr data-id={{candidate.name}} data-candidate_name="{{candidate.candidate_name}}" data-email={{candidate.email}} data-experience="{{candidate.experience}}" data-status="{{candidate.status}}">
+                <th scope="row">{{candidate._index + 1}}</th>
+                <td>{{candidate.candidate_name}}</td>
+                <td>{{candidate.email}}</td>
+                <td>{{candidate.experience}}</td>
+                <td>{{candidate.status}}</td>
+                <td><button onclick="edit_candidate(this)" class="btn btn-outline-info">Edit</button></td>
+                <td><button onclick="delete_candidate(this)" class="btn btn-outline-danger">Delete</button></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+  </table>

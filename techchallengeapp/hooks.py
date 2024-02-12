@@ -147,6 +147,12 @@ app_license = "MIT"
 #	],
 # }
 
+scheduler_events = {
+	"daily": [
+		"techchallengeapp.tasks.daily.delete_rejected_candidates"
+	],
+}
+
 # Testing
 # -------
 

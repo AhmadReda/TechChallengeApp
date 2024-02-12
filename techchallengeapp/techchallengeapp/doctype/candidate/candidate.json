@@ -28,7 +28,7 @@
    "fieldname": "experience",
    "fieldtype": "Select",
    "label": "Experience",
-   "options": "\nLess than 1 Year\n1 Year\n2 Years\n3 Years\n4 Years\n5 Years\n6 Years\n7 Years\n8 Years\n9 Years\n10 Years\nMore than 10 Years",
+   "options": "Less than 1 Year\n1 Year\n2 Years\n3 Years\n4 Years\n5 Years\n6 Years\n7 Years\n8 Years\n9 Years\n10 Years\nMore than 10 Years",
    "reqd": 1
   },
   {
@@ -61,7 +61,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-12 09:38:07.734953",
+ "modified": "2024-02-12 21:28:15.837320",
  "modified_by": "Administrator",
  "module": "Techchallengeapp",
  "name": "Candidate",
