@@ -1,18 +1,20 @@
+var page;
 frappe.pages['candidates'].on_page_load = async function(wrapper) {
-	var page = frappe.ui.make_app_page({
+	page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: 'Candidates',
 		single_column: true
 	});
 	await get_candidates(page)
-	page.set_primary_action('New Candidate', () => create_new_candidate())
-	page.set_secondary_action('Refresh', () => location.reload())
+	page.set_primary_action('New Candidate', () => create_new_candidate(page))
+	page.set_secondary_action('Refresh', () => get_candidates(page))
 }
 async function get_candidates(page){
+	$(page.body).children("table").remove();
 	let result =  await frappe.call({method:'techchallengeapp.techchallengeapp.apis.candidate.get_candidates',type: "GET"})
 	$(frappe.render_template("candidates",{candidates:result.message})).appendTo(page.body)
 }
-async function create_new_candidate(){
+async function create_new_candidate(page){
 	let candidate_meta =  await frappe.call({method:'techchallengeapp.techchallengeapp.apis.candidate.get_candidate_meta',type: "GET"})
 	let d = new frappe.ui.Dialog({
 		title: 'Create New Candidate',
@@ -58,7 +60,8 @@ async function create_new_candidate(){
 				args:values,
 				type: "POST"
 			})
-			.then(r=>{
+			.then(async r=>{
+				await get_candidates(page)
 				frappe.show_alert({
 					message:__(`Candidate ${values['candidate_name']} created successfully`),
 					indicator:'green'
@@ -117,7 +120,8 @@ async function edit_candidate(button){
 				args:values,
 				type: "PUT"
 			})
-			.then(r=>{
+			.then(async r=>{
+				await get_candidates(page)
 				frappe.show_alert({
 					message:__(`Candidate ${values['candidate_name']} updated successfully`),
 					indicator:'green'
@@ -131,25 +135,26 @@ async function edit_candidate(button){
 	console.log(button.parentNode.parentNode.dataset.email)
 }
 function delete_candidate(button){
-	frappe.warn('Are you sure you want to proceed?',
-	`Do you want to delete Candidate ${button.parentNode.parentNode.dataset.candidate_name}?`,
-    () => {
-        // action to perform if Continue is selected
-		frappe.call({
-			method:'techchallengeapp.techchallengeapp.apis.candidate.delete_candidate',
-			args:{'id':button.parentNode.parentNode.dataset.id},
-			type: "DELETE"
-		})
-		.then(r=>{
-			frappe.show_alert({
-				message:__(`Candidate ${button.parentNode.parentNode.dataset.candidate_name} deleted successfully`),
-				indicator:'green'
-			}, 5)
-			d.hide();
-		})
-    },
-    'Continue',
-    true // Sets dialog as minimizable
-)
-
+	frappe.warn(
+		'Are you sure you want to proceed?',
+		`Do you want to delete Candidate ${button.parentNode.parentNode.dataset.candidate_name}?`,
+    	() => {
+			// action to perform if Continue is selected
+			frappe.call({
+				method:'techchallengeapp.techchallengeapp.apis.candidate.delete_candidate',
+				args:{'id':button.parentNode.parentNode.dataset.id},
+				type: "DELETE"
+			})
+			.then(async r=>{
+				await get_candidates(page)
+				frappe.show_alert({
+					message:__(`Candidate ${button.parentNode.parentNode.dataset.candidate_name} deleted successfully`),
+					indicator:'green'
+				}, 5)
+				d.hide();
+			})
+    	},
+    	'Continue',
+    	true // Sets dialog as minimizable
+	)
 }

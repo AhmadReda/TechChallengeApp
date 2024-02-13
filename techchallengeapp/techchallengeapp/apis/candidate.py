@@ -6,7 +6,7 @@ def get_candidates():
     return frappe.db.get_list(
         'Candidate',
         fields=['name', 'candidate_name','email','experience','status'],
-        order_by='candidate_name',
+        order_by='candidate_name'
     )
 
 @frappe.whitelist(methods=["POST"])
